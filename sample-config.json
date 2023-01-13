@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "username": "username",
+      "password": "password",
+      "allowedDomains": [
+        "FQDN"
+      ],
+      "cloudflareApiKey": "APIKEY"
+    }
+  ]
+}
