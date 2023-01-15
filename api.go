@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -46,18 +47,23 @@ func (api *Api) fritzDynDnsUpdate(c *gin.Context) {
 
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"message": "error while updating record", "error": err.Error()})
+				fmt.Printf("could not update dns record %s, error: %s \n", fritzParams.Domain, err.Error())
 				return
 			}
 
 			if v4error != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"message": "error while updating v4 record", "error": v4error.Error()})
+				fmt.Printf("could not update dns record %s with ipv4 %s, error: %s \n", fritzParams.Domain, fritzParams.IpAddr, v4error.Error())
 				return
 			}
 
 			if v6error != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"message": "error while updating v6 record", "error": v6error.Error()})
+				fmt.Printf("could not update dns record %s with ipv6 %s, error: %s \n", fritzParams.Domain, fritzParams.Ip6Addr, v6error.Error())
 				return
 			}
+
+			fmt.Printf("updted dns record %s with ipv4 %s and ipv6 %s \n", fritzParams.Domain, fritzParams.IpAddr, fritzParams.Ip6Addr)
 
 			if noChange {
 				c.JSON(http.StatusAccepted, gin.H{"message": "domain not updated because no change required"})
